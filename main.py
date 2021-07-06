@@ -22,7 +22,8 @@ def handle_start(update, context):
     update.message.reply_text(
         text=('Hola! para usarme, solo tienes que enviarme un sticker y yo te voy a devolver '
               'el <i>file_id</i> para que puedas usar ese sticker en tu bot.\nTambién voy a devolverte el '
-              'update completo <b>por las dudas</b>')
+              'update completo <b>por las dudas</b>'),
+        parse_mode="html"
     )
 
 
