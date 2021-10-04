@@ -1,10 +1,11 @@
 import os
-
+from constants import *
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
 
 
-def handle_message(update, context):
+def handle_sticker_message(update, context):
+    print("Dentro de bot handle_sticker_message")
     update_txt = f"{update}"
     file_id_init = update_txt.rfind("'file_id':")
     file_id = update_txt[file_id_init:]
@@ -12,7 +13,6 @@ def handle_message(update, context):
     file_id = file_id[0]
     print(file_id)
     user_id = update.message.chat_id
-
     user_language = update.effective_user['language_code']
     if user_language == 'es':
         mensaje = f"Aqui tienes el file_id " \
@@ -33,13 +33,14 @@ def handle_message(update, context):
 
 
 def handle_start(update, context):
+    print("Dentro de handle_start")
     user_first_name = update.effective_user['first_name']
 
     user_language = update.effective_user['language_code']
     if user_language == 'es':
         mensaje = (f'Hola {user_first_name}! para usarme, solo tienes que enviarme un sticker y yo te voy a devolver '
-              'el <i>file_id</i> para que puedas usar ese sticker en tu bot.'
-              '\nTambién voy a devolverte el update completo <b>por las dudas</b>')
+                   'el <i>file_id</i> para que puedas usar ese sticker en tu bot.'
+                   '\nTambién voy a devolverte el update completo <b>por las dudas</b>')
     else:
         mensaje = (f"Hi {user_first_name}! To use me, you just have to send me a sticker and I will return the "
                    f"<i> file_id </i> so you can use that sticker in your bot."
@@ -52,22 +53,24 @@ def handle_start(update, context):
 
 
 def handle_donaciones(update, context):
+    print("Dentro de donaciones")
     user_first_name = update.effective_user['first_name']
-
     user_language = update.effective_user['language_code']
     if user_language == 'es':
-        mensaje = (f"Si el bot te fue de utilidad y te ahorro tiempo, considera hacer una donación al desarrollador."
+        mensaje = (f"{user_first_name}! Si el bot te fue de utilidad y te ahorro tiempo, considera hacer una "
+                   f"donación al desarrollador."
                    f"\nPuedes hacerlo desde ko-fi (botón aquí abajo)"
                    f"\nó enviar un mail: stickers-id-dev@telegmail.com")
         button = f"Comprale un Ko-Fi ☕"
     else:
-        mensaje = (f"If the bot was useful and saved you time, consider making a donation to the developer."
+        mensaje = (f"{user_first_name}! If the bot was useful and saved you time, consider making a donation "
+                   f"to the developer."
                    f"\nYou can do it from ko-fi (button below)"
                    f"\nor contact him by mail: stickers-id-dev@telegmail.com")
         button = f"Buy a Ko-Fi ☕"
 
     update.message.reply_text(
-        text= mensaje,
+        text=mensaje,
         parse_mode="html",
         reply_markup=InlineKeyboardMarkup([
             [InlineKeyboardButton(text=button, url='https://ko-fi.com/lucasdeveloper')],
@@ -75,10 +78,55 @@ def handle_donaciones(update, context):
     )
 
 
+def handle_message(update, context):
+    print("Dentro de handle_messages")
+    user_first_name = update.effective_user['first_name']
+    user_language = update.effective_user['language_code']
+    text = update.message.text.lower().strip()
+    if text in HOLA_MSGS:
+        if user_language == 'es':
+            hola_response = (f"Hola {user_first_name}!")
+        else:
+            hola_response = (f"Hi {user_first_name}!")
+
+        update.message.reply_text(
+            text=hola_response,
+            parse_mode="html"
+        )
+    else:
+        pass
+
+
+def handle_ver_codigo(update, context):
+    print("Dentro de handle_messages")
+    user_first_name = update.effective_user['first_name']
+    user_language = update.effective_user['language_code']
+    if user_language == 'es':
+        response = (f"Hola {user_first_name}! Puedes ver el codigo en GitHub usando el botón de abajo!"
+                    f"<i>De paso seguime ;)</i>")
+        button = f"Ver el codigo en GitHub"
+    else:
+        response = (f"Hi {user_first_name}! You can see the code on GitHub using the button below!"
+                    f"\n<i>By the way, follow me!</i>")
+        button = f"See the code on GitHub"
+
+    update.message.reply_text(
+        text=response,
+        parse_mode="html",
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton(text=button, url='https://github.com/lucaslucasprogram/sticker_id_bot')],
+        ])
+    )
+
+
 if __name__ == '__main__':
     updater = Updater(token=os.environ['TOKEN'], use_context=True)
     dp = updater.dispatcher
-    dp.add_handler(MessageHandler(Filters.sticker, handle_message))
+    dp.add_handler(MessageHandler(Filters.sticker, handle_sticker_message))
+    dp.add_handler(MessageHandler(Filters.text, handle_message))
+    dp.add_handler(
+        CommandHandler('ver_codigo', handle_ver_codigo)
+    )
     dp.add_handler(
         CommandHandler('start', handle_start)
     )
