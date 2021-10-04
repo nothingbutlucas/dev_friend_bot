@@ -1,4 +1,6 @@
 import os
+
+from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
 
 
@@ -27,12 +29,26 @@ def handle_start(update, context):
     )
 
 
+def handle_donaciones(update, context):
+    update.message.reply_text(
+        text=(f"Si el bot te fue de utilidad y te ahorro tiempo, considera hacer una donación al desarrollador."
+              f"Puedes hacerlo desde cafecito.app (link aquí abajo). o contactarlo por mail: stickers-id-dev@telegmail.com"),
+        parse_mode="html",
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton(text='Comprale un Café ☕', url='https://cafecito.app/lucasuait')],
+        ])
+    )
+
+
 if __name__ == '__main__':
     updater = Updater(token=os.environ['TOKEN'], use_context=True)
     dp = updater.dispatcher
     dp.add_handler(MessageHandler(Filters.sticker, handle_message))
     dp.add_handler(
         CommandHandler('start', handle_start)
+    )
+    dp.add_handler(
+        CommandHandler('donaciones', handle_donaciones)
     )
     updater.start_polling()
     print('Bot esta más vivo que vivin')
