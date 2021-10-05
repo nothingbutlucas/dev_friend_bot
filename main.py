@@ -18,7 +18,7 @@ def handle_sticker_message(update, context):
 
     else:
         mensaje = f"Here is the file_id" \
-                  f"\n\n<b>{file_id}</b>" \
+                  f"\n\n<code>{file_id}</code>" \
                   f"\n\nAnd just in case, there is the file_unique_id:" \
                   f"\n\n<code>{file_unique_id}</code>"
         button = f"Test it!"
