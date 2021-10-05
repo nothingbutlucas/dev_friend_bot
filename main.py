@@ -1,34 +1,44 @@
 import os
 from constants import *
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
+from telegram.ext import Updater, MessageHandler, Filters, CommandHandler, ConversationHandler, CallbackQueryHandler
 
 
 def handle_sticker_message(update, context):
     print("Dentro de bot handle_sticker_message")
-    update_txt = f"{update}"
-    file_id_init = update_txt.rfind("'file_id':")
-    file_id = update_txt[file_id_init:]
-    file_id = file_id.split(",")
-    file_id = file_id[0]
-    print(file_id)
-    user_id = update.message.chat_id
+    file_id = update.message.sticker.file_id
+    file_unique_id = update.message.sticker.file_unique_id
     user_language = update.effective_user['language_code']
     if user_language == 'es':
-        mensaje = f"Aqui tienes el file_id " \
-                  f"\n\n<b>{file_id}</b>" \
-                  f"\n\nY por las dudas el metodo update completo:" \
-                  f"\n\n<i>{update_txt}</i>"
+        mensaje = f"Aqui tienes el <b>file_id</b>:" \
+                  f"\n\n<code>{file_id}</code>" \
+                  f"\n\nY por las dudas el file_unique_id:" \
+                  f"\n\n<code>{file_unique_id}</code>"
+        button = f"Probarlo!"
 
     else:
         mensaje = f"Here is the file_id" \
                   f"\n\n<b>{file_id}</b>" \
-                  f"\n\nAnd just in case, there is the complete update method:" \
-                  f"\n\n<i>{update_txt}"
-    context.bot.sendMessage(
-        chat_id=user_id,
+                  f"\n\nAnd just in case, there is the file_unique_id:" \
+                  f"\n\n<code>{file_unique_id}</code>"
+        button = f"Test it!"
+
+    update.message.reply_text(
+        reply_to_message_id=update.message.message_id,
         parse_mode="html",
-        text=mensaje
+        text=mensaje,
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton(text=button, callback_data='send_sticker')],
+        ])
+    )
+
+
+def send_sticker(update, context):
+    user_id = update.effective_message.chat_id
+    print(update.effective_message)
+    context.bot.send_sticker(
+        chat_id=user_id,
+        sticker=update.effective_message.reply_to_message.sticker.file_id
     )
 
 
@@ -122,17 +132,24 @@ def handle_ver_codigo(update, context):
 if __name__ == '__main__':
     updater = Updater(token=os.environ['TOKEN'], use_context=True)
     dp = updater.dispatcher
+    dp.add_handler(
+        CommandHandler('start', handle_start)
+    )
     dp.add_handler(MessageHandler(Filters.sticker, handle_sticker_message))
     dp.add_handler(MessageHandler(Filters.text, handle_message))
     dp.add_handler(
         CommandHandler('ver_codigo', handle_ver_codigo)
     )
     dp.add_handler(
-        CommandHandler('start', handle_start)
-    )
-    dp.add_handler(
         CommandHandler('donaciones', handle_donaciones)
     )
+    dp.add_handler(ConversationHandler(
+        entry_points=[
+            CallbackQueryHandler(pattern='send_sticker', callback=send_sticker)
+        ],
+        states={},
+        fallbacks=[]
+    ))
     updater.start_polling()
     print('Bot esta más vivo que vivin')
     updater.idle()
