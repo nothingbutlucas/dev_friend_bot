@@ -136,7 +136,6 @@ if __name__ == '__main__':
         CommandHandler('start', handle_start)
     )
     dp.add_handler(MessageHandler(Filters.sticker, handle_sticker_message))
-    dp.add_handler(MessageHandler(Filters.text, handle_message))
     dp.add_handler(
         CommandHandler('ver_codigo', handle_ver_codigo)
     )
@@ -150,6 +149,7 @@ if __name__ == '__main__':
         states={},
         fallbacks=[]
     ))
+    dp.add_handler(MessageHandler(Filters.text, handle_message))
     updater.start_polling()
     print('Bot esta más vivo que vivin')
     updater.idle()
