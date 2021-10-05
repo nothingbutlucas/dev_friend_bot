@@ -50,11 +50,11 @@ def handle_start(update, context):
     if user_language == 'es':
         mensaje = (f'Hola {user_first_name}! para usarme, solo tienes que enviarme un sticker y yo te voy a devolver '
                    'el <i>file_id</i> para que puedas usar ese sticker en tu bot.'
-                   '\nTambién voy a devolverte el update completo <b>por las dudas</b>')
+                   '\nTambién voy a devolverte el file_unique_id <b>por las dudas</b>')
     else:
         mensaje = (f"Hi {user_first_name}! To use me, you just have to send me a sticker and I will return the "
                    f"<i> file_id </i> so you can use that sticker in your bot."
-                   f"\nI'll also give you the full update <b> just in case </b>")
+                   f"\nI'll also give you the file_unique_id <b> just in case </b>")
 
     update.message.reply_text(
         text=mensaje,
