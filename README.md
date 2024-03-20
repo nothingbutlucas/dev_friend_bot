@@ -29,11 +29,9 @@ Go to [developers_friend_sticker_bot](https://t.me/developers_friend_sticker_bot
 
 Get the image from [here](https://hub.docker.com/repository/docker/nothingbutlucas/developers_friend_sticker_bot)
 
-#### Or Build the image
+#### Or Build the image yourself
 
-##### Clone this repo
-
-```
+```bash
 git clone https://github.com/nothingbutlucas/developers_friend_sticker_bot
 cd developers_friend_sticker_bot
 docker build -t developers_friend_sticker_bot:latest .
@@ -41,8 +39,7 @@ docker build -t developers_friend_sticker_bot:latest .
 
 ### Create the docker-compose yml
 
-```
-version: "3.9"
+```yml
 services:
   app:
     image: nothingbutlucas/developers_friend_sticker_bot:latest
@@ -54,7 +51,7 @@ services:
 
 ### Run docker-compose up
 
-```
+```bash
 docker-compose up -d
 ```
 
