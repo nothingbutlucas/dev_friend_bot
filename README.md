@@ -10,16 +10,9 @@
 
 3. Test it
 
-4. Demo:
-
-
-[![Stickers ID bot video](https://img.youtube.com/vi/M-cf3XSMwNs/0.jpg)](https://www.youtube.com/watch?v=M-cf3XSMwNs)
-
-
-
 ## How to use it? 💻
 
-Go to [developers_friend_sticker_bot](https://t.me/developers_friend_sticker_bot) and use it!
+Go to [developers_friend_sticker_bot](https://t.me/dev_friend_bot) and use it!
 
 ## How to run it on local?
 
