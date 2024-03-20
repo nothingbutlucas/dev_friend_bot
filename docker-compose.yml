@@ -1,0 +1,7 @@
+services:
+  app:
+    image: nothingbutlucas/dev_friend_bot:latest
+    environment:
+      TOKEN: "TEKKEN"
+      LOGGING_LEVEL: INFO
+    command: ["python3", "-u", "main.py"]
