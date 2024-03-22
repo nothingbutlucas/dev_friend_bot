@@ -2,6 +2,6 @@ services:
   app:
     image: nothingbutlucas/dev_friend_bot:latest
     environment:
-      TOKEN: "TEKKEN"
+      TOKEN: "HERE_YOUR_TELEGRAM_TOKEN"
       LOGGING_LEVEL: INFO
     command: ["python3", "-u", "main.py"]

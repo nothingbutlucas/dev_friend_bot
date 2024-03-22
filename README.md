@@ -12,7 +12,7 @@
 
 ## How to use it? 💻
 
-Go to [developers_friend_sticker_bot](https://t.me/dev_friend_bot) and use it!
+Go to [dev_friend_bot](https://t.me/dev_friend_bot) and use it!
 
 ## How to run it on local?
 
@@ -20,14 +20,18 @@ Go to [developers_friend_sticker_bot](https://t.me/dev_friend_bot) and use it!
 
 #### Get it
 
-Get the image from [here](https://hub.docker.com/repository/docker/nothingbutlucas/developers_friend_sticker_bot)
+Get the image from [here](https://hub.docker.com/repository/docker/nothingbutlucas/dev_friend_bot) with this command:
+
+```bash
+docker pull nothingbutlucas/dev_friend_bot:latest
+```
 
 #### Or Build the image yourself
 
 ```bash
-git clone https://github.com/nothingbutlucas/developers_friend_sticker_bot
-cd developers_friend_sticker_bot
-docker build -t developers_friend_sticker_bot:latest .
+git clone https://github.com/nothingbutlucas/dev_friend_bot
+cd dev_friend_bot
+docker build -t dev_friend_bot:latest .
 ```
 
 ### Create the docker-compose yml
@@ -35,11 +39,11 @@ docker build -t developers_friend_sticker_bot:latest .
 ```yml
 services:
   app:
-    image: nothingbutlucas/developers_friend_sticker_bot:latest
+    image: nothingbutlucas/dev_friend_bot:latest
     environment:
-      TOKEN: "TEKKEN" # Este es el token que te dió botfather
+      TOKEN: "HERE_YOUR_TELEGRAM_TOKEN"
       LOGGING_LEVEL: INFO
-    command: ["python3", "-u", "main.py"] # Ejecución del bot
+    command: ["python3", "-u", "main.py"]
 ```
 
 ### Run docker-compose up
