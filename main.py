@@ -10,6 +10,7 @@ from telegram.ext import (
     CallbackQueryHandler,
 )
 
+TOKEN = os.environ.get("TOKEN")
 HOLA_MSGS = ["hola", "hi", "hello", "que onda", "aloja"]
 
 logging_level = os.environ.get("LOGGING_LEVEL", "INFO")
@@ -90,15 +91,15 @@ def handle_donaciones(update, context):
     user_language = update.effective_user["language_code"]
     if user_language == "es":
         mensaje = (
-            f"{user_first_name}! Si el bot te fue de utilidad y te ahorro tiempo, considera hacer una "
-            f"donación al desarrollador."
-            f"\nPuedes hacerlo desde ko-fi (botón aquí abajo)"
+            f"{user_first_name}! Si el bot te fue de utilidad y te ahorro tiempo, considera hacerme una donación."
+            f"Me vendría bien para mantener el server y pagar la luz."
+            f"\nPodes hacerlo desde ko-fi (botón aquí abajo)"
         )
         button = f"Comprame un Ko-Fi ☕"
     else:
         mensaje = (
-            f"{user_first_name}! If the bot was useful and saved you time, consider making a donation "
-            f"to the developer."
+            f"{user_first_name}! If the bot was useful and saved you time, consider making a donation to me."
+            f"It will be a good idea to keep the server and keep the lights on."
             f"\nYou can do it from ko-fi (button below)"
         )
         button = f"Buy me a Ko-Fi ☕"
@@ -129,8 +130,6 @@ def handle_message(update, context):
             hola_response = f"Hi {user_first_name}!"
 
         update.message.reply_text(text=hola_response, parse_mode="html")
-    else:
-        pass
 
 
 def handle_ver_codigo(update, context):
@@ -157,7 +156,7 @@ def handle_ver_codigo(update, context):
                 [
                     InlineKeyboardButton(
                         text=button,
-                        url="https://github.com/lucaslucasprogram/sticker_id_bot",
+                        url="https://github.com/nothingbutlucas/dev_friend_bot",
                     )
                 ],
             ]
@@ -165,25 +164,29 @@ def handle_ver_codigo(update, context):
     )
 
 
+def main() -> None:
+    updater = Updater(TOKEN, use_context=True)
+    dp = updater.dispatcher
+    dp.add_handler(CommandHandler("start", handle_start))
+    dp.add_handler(MessageHandler(Filters.sticker, handle_sticker_message))
+    dp.add_handler(CommandHandler("source_code", handle_ver_codigo))
+    dp.add_handler(CommandHandler("support", handle_donaciones))
+    dp.add_handler(
+        ConversationHandler(
+            entry_points=[
+                CallbackQueryHandler(pattern="send_sticker", callback=send_sticker)
+            ],
+            states={},
+            fallbacks=[],
+        )
+    )
+    dp.add_handler(MessageHandler(Filters.text, handle_message))
+    updater.start_polling()
+    updater.idle()
+
+
 while __name__ == "__main__":
     try:
-        updater = Updater(token=os.environ["TOKEN"], use_context=True)
-        dp = updater.dispatcher
-        dp.add_handler(CommandHandler("start", handle_start))
-        dp.add_handler(MessageHandler(Filters.sticker, handle_sticker_message))
-        dp.add_handler(CommandHandler("ver_codigo", handle_ver_codigo))
-        dp.add_handler(CommandHandler("donaciones", handle_donaciones))
-        dp.add_handler(
-            ConversationHandler(
-                entry_points=[
-                    CallbackQueryHandler(pattern="send_sticker", callback=send_sticker)
-                ],
-                states={},
-                fallbacks=[],
-            )
-        )
-        dp.add_handler(MessageHandler(Filters.text, handle_message))
-        updater.start_polling()
-        updater.idle()
+        main()
     except Exception as e:
         log.error(f"ERROR: {e}")
